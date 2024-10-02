@@ -4,27 +4,26 @@ using UnityEngine;
 
 public class MindSwap : MonoBehaviour
 {
-    public GameObject player1;
-    public GameObject player2;
-    public bool character1Active = true;
+    public List<GameObject> players;
+    public int activePlayer = 0;
 
-    CharacterController controller1;
-    CharacterController controller2;
-    GameObject cam1;
-    GameObject cam2;
-
+    CharacterController activeController;
+    GameObject activeCamera;
 
     void Start()
     {
-        cam1 = player1.transform.Find("Player Camera").gameObject;
-        cam2 = player2.transform.Find("Player Camera").gameObject;
-        controller1 = player1.GetComponent<CharacterController>();
-        controller2 = player2.GetComponent<CharacterController>();
+        if (players.Count > 0)
+        {
+            activeCamera = players[activePlayer].transform.Find("Player Camera").gameObject;
+            activeController = players[activePlayer].GetComponent<CharacterController>();
 
-        player2.GetComponent<CharacterController>().enabled = false;
-
-        cam1.SetActive(true);
-        cam2.SetActive(false);
+            ActivateController();
+            ActivateCamera();
+        }
+        else
+        {
+            Debug.LogError("Player list is empty");
+        }
     }
 
     // Update is called once per frame
@@ -36,23 +35,36 @@ public class MindSwap : MonoBehaviour
         }
     }
 
-    public void SwapMind()
+    void SwapMind()
     {
-        if (character1Active && controller1.isGrounded)
+        if (activeController.isGrounded)
         {
-            cam1.SetActive(false);
-            cam2.SetActive(true);
-            player1.GetComponent<CharacterController>().enabled = false;
-            player2.GetComponent<CharacterController>().enabled = true;
-            character1Active = false;
+            activePlayer = (activePlayer + 1) % players.Count;
+            activeCamera = players[activePlayer].transform.Find("Player Camera").gameObject;
+            activeController = players[activePlayer].GetComponent<CharacterController>();
+
+            ActivateCamera();
+            ActivateController();
         }
-        else if (!character1Active && controller2.isGrounded)
+    }
+
+    void ActivateCamera()
+    {
+        foreach (GameObject player in players) 
         {
-            cam1.SetActive(true);
-            cam2.SetActive(false);
-            player1.GetComponent<CharacterController>().enabled = true;
-            player2.GetComponent<CharacterController>().enabled = false;
-            character1Active = true;
+            GameObject camera = player.transform.Find("Player Camera").gameObject;
+            camera.SetActive(false);
         }
+        activeCamera.SetActive(true);
+    }
+
+    void ActivateController()
+    {
+        foreach (GameObject player in players) 
+        {
+            CharacterController controller = player.GetComponent<CharacterController>();
+            controller.enabled = false;
+        }
+        activeController.enabled = true;
     }
 }
