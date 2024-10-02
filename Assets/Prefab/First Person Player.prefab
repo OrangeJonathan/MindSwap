@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 4570602897868385503}
   - component: {fileID: 1523262350763888335}
   - component: {fileID: 6556064074366613534}
+  - component: {fileID: 4527633547896415883}
+  - component: {fileID: 1680341023777070946}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -107,6 +109,54 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!65 &4527633547896415883
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3531691609988219205}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.17897199, z: 1.0000002}
+  m_Center: {x: 0.000000059604645, y: -0.95894706, z: -0.00000011920929}
+--- !u!54 &1680341023777070946
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3531691609988219205}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 0
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 90
+  m_CollisionDetection: 0
 --- !u!1 &3574257381058065957
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,7 +170,7 @@ GameObject:
   - component: {fileID: 1228872574188374784}
   m_Layer: 0
   m_Name: First Person Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -135,8 +185,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4776602841595959928}
   - {fileID: 5531528987731813184}
@@ -183,9 +233,9 @@ MonoBehaviour:
   controller: {fileID: 8022748390867037558}
   moveSpeed: 10
   gravity: -19.81
-  jumpHeight: 3
+  jumpHeight: 2.5
   groundCheck: {fileID: 4776602841595959928}
-  groundDistance: 1.6
+  groundDistance: 3.1
   groundMask:
     serializedVersion: 2
     m_Bits: 64
