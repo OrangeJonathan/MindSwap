@@ -6,8 +6,8 @@ public class PlayerAbility : MonoBehaviour
 {
     public enum Ability
     {
-        PickUp,
-        HighJump,
-        Shooting
+        PickUp = 0,
+        HighJump = 1,
+        Electrician = 2,
     }
 }

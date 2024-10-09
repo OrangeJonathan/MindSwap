@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ActivatePlatform : MonoBehaviour
 {
-    public MonoBehaviour activatorObject; // This can be either PressButton or PressurePlate
+    public MonoBehaviour activatorObject;
     private IActivatable activator;
 
     void Start()
@@ -19,8 +19,15 @@ public class ActivatePlatform : MonoBehaviour
     private void EnablePlatform()
     {
         gameObject.transform.GetChild(0).gameObject.SetActive(true);
-        // Optionally, you can disable further activation or remove the event if needed
         activator.OnActivate -= EnablePlatform;
+        activator.OnDeactivate += DisablePlatform;
+    }
+
+    private void DisablePlatform()
+    {
+        gameObject.transform.GetChild(0).gameObject.SetActive(false);
+        activator.OnActivate += EnablePlatform;
+        activator.OnDeactivate -= DisablePlatform;
     }
 
     private void OnDestroy()
@@ -28,6 +35,7 @@ public class ActivatePlatform : MonoBehaviour
         if (activator != null)
         {
             activator.OnActivate -= EnablePlatform;
+            activator.OnDeactivate -= DisablePlatform;
         }
     }
 }

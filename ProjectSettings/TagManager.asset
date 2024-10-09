@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - PickUpCube
   layers:
   - Default
   - TransparentFX
@@ -25,6 +26,9 @@ TagManager:
   - 
   - 
   - 
+  - PressurePlate
+  - Collider
+  - Trigger
   - 
   - 
   - 
@@ -33,10 +37,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Player
   m_SortingLayers:
   - name: Default
     uniqueID: 0

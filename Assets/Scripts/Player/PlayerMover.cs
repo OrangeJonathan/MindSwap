@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMover : MonoBehaviour
 {
     public CharacterController controller;
-    public PlayerAbility.Ability playerAbility;
+    private PlayerAbility.Ability playerAbility;
     [Header("Movement")]
     public float moveSpeed = 10f;
     public float gravity = -9.81f;
@@ -22,6 +22,7 @@ public class PlayerMover : MonoBehaviour
 
     void Start()
     {
+        playerAbility = this.gameObject.GetComponent<PlayerProperties>().GetAbility();
         switch (playerAbility)
         {
             case PlayerAbility.Ability.HighJump:

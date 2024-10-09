@@ -1,17 +1,23 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MindSwap : MonoBehaviour
 {
     public List<GameObject> players;
-    public int activePlayer = 0;
+    public PlayerAbility.Ability activePlayer = 0;
+    private int activePlayerIndex;
     private CharacterController activeController;
     private GameObject activeCamera;
+    [SerializeField]
+    private ItemObtain itemObtain;
     public bool hasRemoteSwapper = false;
     public List<SwapPanel> swapPanels = new();
 
     void Start()
-    {        
+    {
+        itemObtain.OnObtain += ObtainsRemoteSwapper;
+
         // Subscribe to the SwapPanel's event
         foreach (var swapPanel in swapPanels)
         {
@@ -20,8 +26,8 @@ public class MindSwap : MonoBehaviour
 
         if (players.Count > 0)
         {
-            activeCamera = players[activePlayer].transform.Find("Player Camera").gameObject;
-            activeController = players[activePlayer].GetComponent<CharacterController>();
+            activeCamera = players[(int)activePlayer].transform.Find("Player Camera").gameObject;
+            activeController = players[(int)activePlayer].GetComponent<CharacterController>();
 
             ActivateController();
             ActivateCamera();
@@ -35,29 +41,30 @@ public class MindSwap : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.RightShift))
+        if (Input.GetKeyDown(KeyCode.Q) && hasRemoteSwapper)
         {
-            SwapMind(); // This can be used to swap mind without panels if needed
+            SwapMind(); 
         }
     }
 
     // Method to be called when the event is raised, accepts the index from the event
-    void SwapMind(int index)
+    void SwapMind(PlayerAbility.Ability ability)
     {
-        if (activePlayer == index)
+        if (activePlayer == ability)
         {
             Debug.Log("Cant swap to player that is currently active");
             return;
         }
-        if (index < 0 || index >= players.Count)
+        if (ability < 0 || (int)ability >= players.Count)
         {
-            Debug.LogWarning($"Index {index} is out of range for players.");
+            Debug.LogWarning($"Index {(int)ability} is out of range for players.");
             return;
         }
 
-        activePlayer = index;
-        activeCamera = players[activePlayer].transform.Find("Player Camera").gameObject;
-        activeController = players[activePlayer].GetComponent<CharacterController>();
+        activePlayer = ability;
+        activePlayerIndex = (int)ability;
+        activeCamera = players[activePlayerIndex].transform.Find("Player Camera").gameObject;
+        activeController = players[activePlayerIndex].GetComponent<CharacterController>();
 
         ActivateCamera();
         ActivateController();
@@ -66,9 +73,10 @@ public class MindSwap : MonoBehaviour
     void SwapMind()
     {
         if (!activeController.isGrounded) return;
-        activePlayer = (activePlayer + 1) % players.Count;
-        activeCamera = players[activePlayer].transform.Find("Player Camera").gameObject;
-        activeController = players[activePlayer].GetComponent<CharacterController>();
+        activePlayerIndex = (activePlayerIndex + 1) % players.Count;
+        activePlayer = (PlayerAbility.Ability)activePlayerIndex;
+        activeCamera = players[activePlayerIndex].transform.Find("Player Camera").gameObject;
+        activeController = players[activePlayerIndex].GetComponent<CharacterController>();
 
         ActivateCamera();
         ActivateController();
@@ -92,6 +100,17 @@ public class MindSwap : MonoBehaviour
             controller.enabled = false;
         }
         activeController.enabled = true;
+    }
+
+    void ObtainsRemoteSwapper()
+    {
+        hasRemoteSwapper = true;
+        itemObtain.OnObtain -= ObtainsRemoteSwapper;
+    }
+
+    void LosesRemoteSwapper()
+    {
+        hasRemoteSwapper = false;
     }
 
     private void OnDestroy()

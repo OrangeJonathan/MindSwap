@@ -5,13 +5,16 @@ using UnityEngine;
 public class SwapPanel : MonoBehaviour
 {
     // Modify the event to pass an integer parameter (the swap index)
-    public event Action<int> OnSwapActivate;
-    
-    public int swapToIndex;
+    public event Action<PlayerAbility.Ability> OnSwapActivate;
+    public PlayerAbility.Ability swapToAbility;
+    [SerializeField]
+    private UnlockNewPlayer unlockNewPlayer;
+    public bool addNewPlayer;
     private HashSet<Transform> playersInRange = new();
 
     void Update()
     {
+        
         foreach (Transform player in playersInRange)
         {
             if (Input.GetKeyDown(KeyCode.E))
@@ -25,11 +28,16 @@ public class SwapPanel : MonoBehaviour
 
     void SwapPanelInteraction()
     {
-        Debug.Log("Interacted:" + swapToIndex);
+        Debug.Log("Interacted:" + swapToAbility);
         playersInRange.Clear();
         this.gameObject.transform.GetChild(0).gameObject.SetActive(false);
 
-        OnSwapActivate?.Invoke(swapToIndex);
+        if (addNewPlayer)
+        {
+            unlockNewPlayer.NewPlayerUnlock();
+        }
+
+        OnSwapActivate?.Invoke(swapToAbility);
     }
 
     private void OnTriggerEnter(Collider other)
