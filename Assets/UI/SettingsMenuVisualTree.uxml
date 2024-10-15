@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/PauseMenuStyle.uss?fileID=7433441132597879392&amp;guid=ac8b01bd11d6f174cb4c25fe7d0470e4&amp;type=3#PauseMenuStyle" />
+    <ui:VisualElement name="SettingsMenu" style="flex-grow: 1; position: relative; width: auto; height: auto; color: rgb(26, 21, 21); opacity: 1; overflow: visible; -unity-background-scale-mode: stretch-to-fill; background-color: rgba(24, 22, 22, 0.76);">
+        <ui:Label tabindex="-1" text="settings" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Header" class="header" />
+        <ui:Slider label="Sensitivity" high-value="1000" direction="Horizontal" show-input-field="true" name="SensitivitySlider" low-value="1" focusable="true" inverted="false" style="-unity-font: url(&quot;project://database/Assets/TextMesh%20Pro/Examples%20&amp;%20Extras/Fonts/Electronic%20Highway%20Sign.TTF?fileID=12800000&amp;guid=8a2b9e2a607dd2143b58c44bc32410b4&amp;type=3#Electronic Highway Sign&quot;); -unity-font-definition: initial; color: rgb(232, 232, 232); -unity-font-style: bold; padding-top: 50px; padding-right: 0; padding-bottom: 0; padding-left: 0; opacity: 1; visibility: visible; display: flex; overflow: visible; background-color: rgba(0, 0, 0, 0); bottom: auto; right: 0;" />
+        <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BackGameButton" class="button" style="margin-top: 30px; width: 320px;" />
+    </ui:VisualElement>
+</ui:UXML>

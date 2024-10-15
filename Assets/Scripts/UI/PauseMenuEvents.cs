@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.WSA;
@@ -7,18 +7,32 @@ using UnityEngine.WSA;
 public class PauseMenuEvents : MonoBehaviour
 {
     private UIDocument _document;
-    private UnityEngine.UIElements.Button _button;
     private VisualElement _pauseMenu;
+    private UnityEngine.UIElements.Button _resumeButton, _settingsButton, _quitButton;
+
     private bool isPaused = false;
 
     void Start()
     {
+        if (!MenuManager.IsInitialised)
+        {
+            MenuManager.Init();
+            Debug.Log("initialize pause menu");
+        }
+
         _document = GetComponent<UIDocument>();
         _document.enabled = true;
         _pauseMenu = _document.rootVisualElement.Q("PauseMenu");
-        _button = _document.rootVisualElement.Q("ResumeGameButton") as UnityEngine.UIElements.Button;
-        _button.RegisterCallback<ClickEvent>(OnResumeGameClick);
-        _pauseMenu.style.display = DisplayStyle.None; // Hide the pause menu
+
+        _resumeButton = _document.rootVisualElement.Q<UnityEngine.UIElements.Button>("ResumeGameButton");
+        _settingsButton = _document.rootVisualElement.Q<UnityEngine.UIElements.Button>("OptionsGameButton");
+        _quitButton = _document.rootVisualElement.Q<UnityEngine.UIElements.Button>("QuitGameButton");
+
+        _resumeButton.RegisterCallback<ClickEvent>(OnResumeGameClick);
+        _settingsButton.RegisterCallback<ClickEvent>(OnSettingsGameClick);
+        _quitButton.RegisterCallback<ClickEvent>(OnQuitGameClick);
+
+        _pauseMenu.style.display = DisplayStyle.None;
     }
 
     void Update()
@@ -38,15 +52,27 @@ public class PauseMenuEvents : MonoBehaviour
         UnPauseGame();
     }
 
+    private void OnSettingsGameClick(ClickEvent evt)
+    {
+        MenuManager.OpenMenu(Menu.SETTINGS, _pauseMenu);
+    }
+
+    private void OnQuitGameClick(ClickEvent evt)
+    {
+        UnityEngine.Application.Quit();
+    }
+
     private void OnDisable()
     {
-        _button.UnregisterCallback<ClickEvent>(OnResumeGameClick);
+        _resumeButton.UnregisterCallback<ClickEvent>(OnResumeGameClick);
+        _settingsButton.UnregisterCallback<ClickEvent>(OnSettingsGameClick);
+        _quitButton.UnregisterCallback<ClickEvent>(OnSettingsGameClick);
     }
 
     private void PauseGame()
     {
         Time.timeScale = 0f;
-        _pauseMenu.style.display = DisplayStyle.Flex; // Show the pause menu
+        MenuManager.OpenMenu(Menu.PAUSE, null);
         UnityEngine.Cursor.lockState = CursorLockMode.None;
         UnityEngine.Cursor.visible = true;
         isPaused = true;
@@ -55,7 +81,7 @@ public class PauseMenuEvents : MonoBehaviour
     private void UnPauseGame()
     {
         Time.timeScale = 1f;
-        _pauseMenu.style.display = DisplayStyle.None; // Hide the pause menu
+        MenuManager.CloseAllMenus();
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         UnityEngine.Cursor.visible = false;
         isPaused = false;
