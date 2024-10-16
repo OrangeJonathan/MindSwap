@@ -13,6 +13,7 @@ public class MindSwap : MonoBehaviour
     private ItemObtain itemObtain;
     public bool hasRemoteSwapper = false;
     public List<SwapPanel> swapPanels = new();
+    private int swapCount;
 
     void Start()
     {
@@ -61,6 +62,8 @@ public class MindSwap : MonoBehaviour
             return;
         }
 
+        swapCount++;
+        Debug.Log(swapCount);
         activePlayer = ability;
         activePlayerIndex = (int)ability;
         activeCamera = players[activePlayerIndex].transform.Find("Player Camera").gameObject;
@@ -111,6 +114,16 @@ public class MindSwap : MonoBehaviour
     void LosesRemoteSwapper()
     {
         hasRemoteSwapper = false;
+    }
+
+    public int GetSwapCount()
+    {
+        return swapCount;
+    }
+
+    public void SetSwapCount(int count)
+    {
+        swapCount = count;
     }
 
     private void OnDestroy()
