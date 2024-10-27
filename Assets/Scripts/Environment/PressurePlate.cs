@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
+using ColorUtility = UnityEngine.ColorUtility;
 
 public class PressurePlate : MonoBehaviour, IActivatable
 {
@@ -16,6 +14,12 @@ public class PressurePlate : MonoBehaviour, IActivatable
     {
         if (collider != currentCollider && currentCollider != null) return;
         currentCollider = collider;
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.material.color = Color.green;
+        }
         gameObject.GetComponent<Renderer>().material.color = Color.green;
         OnActivate?.Invoke(); // Fire the OnActivate event when the pressure plate is triggered
     }
@@ -24,7 +28,27 @@ public class PressurePlate : MonoBehaviour, IActivatable
     {
         if (collider != currentCollider) return;
         currentCollider = null;
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.material.color = HexToColor("#1D1D1D");
+        }
         gameObject.GetComponent<Renderer>().material.color = Color.red;
         OnDeactivate?.Invoke(); // Optionally, fire the OnDeactivate event when the pressure plate is released
+    }
+
+    private Color HexToColor(string hex)
+    {
+        Color color;
+        if (ColorUtility.TryParseHtmlString(hex, out color))
+        {
+            return color;
+        }
+        else
+        {
+            Debug.LogWarning("Invalid hex color code provided.");
+            return Color.white; // Default color if hex is invalid
+        }
     }
 }
