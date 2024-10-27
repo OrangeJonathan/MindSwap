@@ -6,7 +6,7 @@ public class SwapPanel : MonoBehaviour
 {
     // Modify the event to pass an integer parameter (the swap index)
     public event Action<PlayerAbility.Ability> OnSwapActivate;
-    public PlayerAbility.Ability swapToAbility;
+    public PlayerAbility.Ability swapToAbility = 0;
     [SerializeField]
     private UnlockNewPlayer unlockNewPlayer;
     public bool addNewPlayer;

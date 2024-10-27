@@ -333,7 +333,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99391db34c7fb2f44b2b86f8e6b1ba46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  swapToIndex: 0
+  swapToAbility: 0
+  unlockNewPlayer: {fileID: 0}
+  addNewPlayer: 0
 --- !u!1 &8302868055054836956
 GameObject:
   m_ObjectHideFlags: 0
