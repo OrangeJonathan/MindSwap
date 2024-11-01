@@ -23,6 +23,7 @@ public class MindSwap : MonoBehaviour
         foreach (var swapPanel in swapPanels)
         {
             swapPanel.OnSwapActivate += SwapMind; // Subscribe to the event
+            swapPanel.OnSwapActivateAbility += SwapMind;
         }
 
         if (players.Count > 0)

@@ -26,6 +26,11 @@ public class ElectricalBox : MonoBehaviour, IActivatable
     void InteractWithElectricalBox()
     {
         isElectricalBoxActivated = true;
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.material.color = Color.green;
+        }
         OnActivate?.Invoke(); // Fire the OnActivate event when button is pressed
     }
 
@@ -34,6 +39,7 @@ public class ElectricalBox : MonoBehaviour, IActivatable
         if (other.CompareTag("Player") && other.GetComponent<PlayerProperties>().GetAbility() == PlayerAbility.Ability.Electrician && !isElectricalBoxActivated)
         {
             Transform playerTransform = other.transform;
+            this.gameObject.transform.GetChild(0).gameObject.SetActive(true);
             playersInRange.Add(playerTransform);
         }
     }
@@ -43,6 +49,7 @@ public class ElectricalBox : MonoBehaviour, IActivatable
         if (other.CompareTag("Player"))
         {
             Transform playerTransform = other.transform;
+            this.gameObject.transform.GetChild(0).gameObject.SetActive(false);
             playersInRange.Remove(playerTransform);
         }
     }

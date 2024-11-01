@@ -8,7 +8,6 @@ public class PickUp : MonoBehaviour
     public event Action OnPickUp; 
     public event Action OnRelease;
 
-    public float interactionDistance = 2f;
     private bool itemPickedUp = false;
     private Collider currentCollider;
     private HashSet<Transform> playersInRange = new();
@@ -25,12 +24,12 @@ public class PickUp : MonoBehaviour
     {
         foreach (Transform player in playersInRange)
         {
-            if (!itemPickedUp && Input.GetKeyDown(KeyCode.Mouse0))
+            if (!itemPickedUp && Input.GetKeyDown(KeyCode.E))
             {
                 PickUpItem();
                 break;
             }
-            if (itemPickedUp && Input.GetKeyDown(KeyCode.Mouse0))
+            if (itemPickedUp && Input.GetKeyDown(KeyCode.E))
             {
                 ReleaseItem();      
                 break;
@@ -80,6 +79,7 @@ public class PickUp : MonoBehaviour
         {
             currentCollider = other;
             Transform playerTransform = other.transform;
+            this.gameObject.transform.GetChild(0).gameObject.SetActive(true);
             playersInRange.Add(playerTransform);
         }
     }
@@ -90,6 +90,7 @@ public class PickUp : MonoBehaviour
         {
             currentCollider = null;
             Transform playerTransform = other.transform;
+            this.gameObject.transform.GetChild(0).gameObject.SetActive(false);
             playersInRange.Remove(playerTransform);
         }
     }

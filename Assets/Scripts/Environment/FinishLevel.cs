@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FinishLevel : MonoBehaviour
 {
@@ -47,6 +48,7 @@ public class FinishLevel : MonoBehaviour
     private void EndLevel()
     {
         Debug.Log("All players are on the pressure plates. Level Finished!");
+        SceneManager.LoadScene("EndScreen");
     }
 
     private void OnDestroy()

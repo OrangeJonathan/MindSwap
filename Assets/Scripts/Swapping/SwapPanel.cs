@@ -5,7 +5,9 @@ using UnityEngine;
 public class SwapPanel : MonoBehaviour
 {
     // Modify the event to pass an integer parameter (the swap index)
-    public event Action<PlayerAbility.Ability> OnSwapActivate;
+    public event Action OnSwapActivate;
+    public event Action<PlayerAbility.Ability> OnSwapActivateAbility;
+
     public PlayerAbility.Ability swapToAbility = 0;
     [SerializeField]
     private UnlockNewPlayer unlockNewPlayer;
@@ -35,9 +37,10 @@ public class SwapPanel : MonoBehaviour
         if (addNewPlayer)
         {
             unlockNewPlayer.NewPlayerUnlock();
+            OnSwapActivateAbility?.Invoke(swapToAbility);
         }
 
-        OnSwapActivate?.Invoke(swapToAbility);
+        OnSwapActivate?.Invoke();
     }
 
     private void OnTriggerEnter(Collider other)

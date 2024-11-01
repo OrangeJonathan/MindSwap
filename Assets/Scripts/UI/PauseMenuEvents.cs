@@ -2,7 +2,6 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.WSA;
 
 public class PauseMenuEvents : MonoBehaviour
 {
