@@ -5,6 +5,8 @@ using UnityEngine;
 public class MindSwap : MonoBehaviour
 {
     public List<GameObject> players;
+
+    public event Action OnChangeAbility;
     public PlayerAbility.Ability activePlayer = 0;
     private int activePlayerIndex;
     private CharacterController activeController;
@@ -70,6 +72,8 @@ public class MindSwap : MonoBehaviour
         activeCamera = players[activePlayerIndex].transform.Find("Player Camera").gameObject;
         activeController = players[activePlayerIndex].GetComponent<CharacterController>();
 
+        OnChangeAbility?.Invoke();
+
         ActivateCamera();
         ActivateController();
     }
@@ -81,6 +85,8 @@ public class MindSwap : MonoBehaviour
         activePlayer = (PlayerAbility.Ability)activePlayerIndex;
         activeCamera = players[activePlayerIndex].transform.Find("Player Camera").gameObject;
         activeController = players[activePlayerIndex].GetComponent<CharacterController>();
+
+        OnChangeAbility?.Invoke();
 
         ActivateCamera();
         ActivateController();
