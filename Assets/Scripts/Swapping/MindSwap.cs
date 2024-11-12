@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class MindSwap : MonoBehaviour
 {
     public List<GameObject> players;
-
     public event Action OnChangeAbility;
-    public PlayerAbility.Ability activePlayer = 0;
+    public PlayerAbility.Ability activePlayer = PlayerAbility.Ability.PickUp;
     private int activePlayerIndex;
     private CharacterController activeController;
     private GameObject activeCamera;
@@ -15,7 +16,6 @@ public class MindSwap : MonoBehaviour
     private ItemObtain itemObtain;
     public bool hasRemoteSwapper = false;
     public List<SwapPanel> swapPanels = new();
-    private int swapCount;
 
     void Start()
     {
@@ -24,7 +24,6 @@ public class MindSwap : MonoBehaviour
         // Subscribe to the SwapPanel's event
         foreach (var swapPanel in swapPanels)
         {
-            swapPanel.OnSwapActivate += SwapMind; // Subscribe to the event
             swapPanel.OnSwapActivateAbility += SwapMind;
         }
 
@@ -42,31 +41,29 @@ public class MindSwap : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q) && hasRemoteSwapper)
-        {
-            SwapMind(); 
-        }
-    }
-
     // Method to be called when the event is raised, accepts the index from the event
-    void SwapMind(PlayerAbility.Ability ability)
+    public void SwapMind(PlayerAbility.Ability ability)
     {
+        GameObject switchTo = players[(int)ability].gameObject;
+
         if (activePlayer == ability)
         {
             Debug.Log("Cant swap to player that is currently active");
             return;
         }
-        if (ability < 0 || (int)ability >= players.Count)
+
+        if (!switchTo.GetComponent<PlayerProperties>().IsUnlocked)
+        {
+            Debug.Log("Cant swap to player that is not unlocked");
+            return;
+        }
+        
+        if (ability < 0)
         {
             Debug.LogWarning($"Index {(int)ability} is out of range for players.");
             return;
         }
 
-        swapCount++;
-        Debug.Log(swapCount);
         activePlayer = ability;
         activePlayerIndex = (int)ability;
         activeCamera = players[activePlayerIndex].transform.Find("Player Camera").gameObject;
@@ -78,11 +75,31 @@ public class MindSwap : MonoBehaviour
         ActivateController();
     }
 
-    void SwapMind()
+    public void SwapMindFromUI()
     {
-        if (!activeController.isGrounded) return;
-        activePlayerIndex = (activePlayerIndex + 1) % players.Count;
-        activePlayer = (PlayerAbility.Ability)activePlayerIndex;
+        GameObject textObject = EventSystem.current.currentSelectedGameObject.transform.GetChild(0).gameObject;
+        string ability = textObject.GetComponent<Text>().text;
+
+        Debug.Log("Input string ?" + ability);
+
+        PlayerAbility.Ability swapToAbility = GetAbilityFromString(ability);
+        GameObject switchTo = players[(int)swapToAbility];
+
+        if (activePlayer == GetAbilityFromString(ability))
+        {
+            Debug.Log("Cant swap to player that is currently active");
+            return;
+        }
+
+        if (!switchTo.GetComponent<PlayerProperties>().IsUnlocked)
+        {
+            Debug.Log("Cant swap to player that is not unlocked");
+            return;
+        }
+
+        activePlayer = swapToAbility;
+        activePlayerIndex = (int)swapToAbility;
+
         activeCamera = players[activePlayerIndex].transform.Find("Player Camera").gameObject;
         activeController = players[activePlayerIndex].GetComponent<CharacterController>();
 
@@ -90,6 +107,21 @@ public class MindSwap : MonoBehaviour
 
         ActivateCamera();
         ActivateController();
+    }
+
+    PlayerAbility.Ability GetAbilityFromString(string ability)
+    {
+        bool hasParsed = Enum.TryParse(ability, out PlayerAbility.Ability parsedAbility);
+        if (hasParsed)
+        {
+            Debug.Log(parsedAbility);
+        }
+        else
+        {
+            Debug.Log("Parse failed!" + ability);
+        }
+
+        return parsedAbility;
     }
 
     void ActivateCamera()
@@ -123,22 +155,12 @@ public class MindSwap : MonoBehaviour
         hasRemoteSwapper = false;
     }
 
-    public int GetSwapCount()
-    {
-        return swapCount;
-    }
-
-    public void SetSwapCount(int count)
-    {
-        swapCount = count;
-    }
-
     private void OnDestroy()
     {
         // Unsubscribe from the event to avoid potential memory leaks
         foreach (var swapPanel in swapPanels)
         {
-            swapPanel.OnSwapActivate -= SwapMind;
+            swapPanel.OnSwapActivateAbility -= SwapMind;
         }
     }
 }

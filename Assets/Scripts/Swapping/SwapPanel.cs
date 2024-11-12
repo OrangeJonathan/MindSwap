@@ -5,13 +5,11 @@ using UnityEngine;
 public class SwapPanel : MonoBehaviour
 {
     // Modify the event to pass an integer parameter (the swap index)
-    public event Action OnSwapActivate;
+    public MindSwap mindSwapController;
     public event Action<PlayerAbility.Ability> OnSwapActivateAbility;
 
     public PlayerAbility.Ability swapToAbility = 0;
-    [SerializeField]
-    private UnlockNewPlayer unlockNewPlayer;
-    public bool addNewPlayer;
+    public bool UnlockPlayer;
     private HashSet<Transform> playersInRange = new();
 
     void Update()
@@ -30,18 +28,23 @@ public class SwapPanel : MonoBehaviour
 
     void SwapPanelInteraction()
     {
-        Debug.Log("Interacted:" + swapToAbility);
+        Debug.Log("Interacted with panel for ability: " + swapToAbility);
         playersInRange.Clear();
         this.gameObject.transform.GetChild(0).gameObject.SetActive(false);
 
-        if (addNewPlayer)
+        var currentAbility = mindSwapController.activePlayer;
+
+        if (UnlockPlayer)
         {
-            unlockNewPlayer.NewPlayerUnlock();
-            OnSwapActivateAbility?.Invoke(swapToAbility);
+            GameObject switchTo = mindSwapController.players[(int)swapToAbility].gameObject;
+            switchTo.GetComponent<PlayerProperties>().UnlockPlayer();
         }
 
-        OnSwapActivate?.Invoke();
+        OnSwapActivateAbility?.Invoke(swapToAbility);
+        // Update after swap to switch between
+        swapToAbility = currentAbility;
     }
+
 
     private void OnTriggerEnter(Collider other)
     {

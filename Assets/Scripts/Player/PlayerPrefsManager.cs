@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerPrefsManager
 {
     public static bool IsInitialised { get; private set; }
+    public static float savedSensitivity { get; private set; }
 
     public static void Init()
     {
@@ -28,6 +29,20 @@ public class PlayerPrefsManager
         {
             PlayerPrefs.SetFloat("Sensitivity", newSensitivity);
             PlayerPrefs.Save();
+            savedSensitivity = newSensitivity;
         }
+    }
+
+    public static void LockMouseMovement()
+    {
+        savedSensitivity = PlayerPrefs.GetFloat("Sensitivity");
+        PlayerPrefs.SetFloat("Sensitivity", 0f);
+        PlayerPrefs.Save();
+    }
+
+    public static void UnlockMouseMovement()
+    {
+        PlayerPrefs.SetFloat("Sensitivity", savedSensitivity);
+        PlayerPrefs.Save();
     }
 }

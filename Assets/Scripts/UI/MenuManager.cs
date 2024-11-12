@@ -53,4 +53,12 @@ public static class MenuManager
         pauseMenu.style.display = DisplayStyle.None;
         settingsMenu.style.display = DisplayStyle.None;
     }
+
+    public static bool IsAnyMenuOpen()
+    {
+        if (!IsInitialised)
+            Init();
+
+        return pauseMenu.style.display == DisplayStyle.Flex || settingsMenu.style.display == DisplayStyle.Flex;
+    }
 }
