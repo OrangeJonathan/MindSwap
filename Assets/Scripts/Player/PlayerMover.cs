@@ -6,6 +6,7 @@ public class PlayerMover : MonoBehaviour
 {
     public CharacterController controller;
     private PlayerAbility.Ability playerAbility;
+    public Animator animator;
 
     [Header("Movement")]
     public float moveSpeed = 10f;
@@ -18,6 +19,7 @@ public class PlayerMover : MonoBehaviour
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
     private bool isGrounded;
+
 
     void Start()
     {
@@ -65,8 +67,16 @@ public class PlayerMover : MonoBehaviour
         float xMove = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
         float zMove = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed;
 
-        Vector3 move = transform.right * xMove + transform.forward * zMove;
+        if (xMove != 0 || zMove != 0)
+        {
+            animator.SetBool("IsMoving", true);
+        } 
+        else
+        {
+            animator.SetBool("IsMoving", false);
+        }
 
+        Vector3 move = transform.right * xMove + transform.forward * zMove;
         controller.Move(move);
     }
 }
