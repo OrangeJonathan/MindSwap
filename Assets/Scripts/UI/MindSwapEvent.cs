@@ -46,10 +46,26 @@ public class MindSwapEvent : MonoBehaviour
             GameObject textObject = buttons[buttonIndex].transform.GetChild(0).gameObject;
             Text uiText = textObject.GetComponent<Text>();
 
+            GameObject currentButton = null;
+            currentButton = buttons[buttonIndex];
+
             if (!playerProperties.IsUnlocked)
             {
-                buttons[buttonIndex].GetComponent<Image>().color = Color.gray;
+                currentButton.GetComponent<Image>().color = Color.gray;
+                var button = currentButton.GetComponent<UnityEngine.UI.Button>();
+                var colors = button.colors;
+                colors.highlightedColor = new Color(0.4f, 0.4f, 0.4f, 1.0f);
+                button.colors = colors;
             }
+            else
+            {
+                currentButton.GetComponent<Image>().color = new Color(0.1372549f, 0.7372549f, 0.972549f);
+                var button = currentButton.GetComponent<UnityEngine.UI.Button>();
+                var colors = button.colors;
+                colors.highlightedColor = new Color(0.1372549f, 0.8235294f, 0.972549f, 1.0f);
+                button.colors = colors;
+            }
+
 
             if (uiText != null)
             {
