@@ -44,6 +44,8 @@ public class MindSwap : MonoBehaviour
     // Method to be called when the event is raised, accepts the index from the event
     public void SwapMind(PlayerAbility.Ability ability)
     {
+        if (!activeController.isGrounded) return;
+        players[(int)activePlayer].gameObject.GetComponentInChildren<Animator>().SetBool("IsMoving", false);
         GameObject switchTo = players[(int)ability].gameObject;
 
         if (activePlayer == ability)
@@ -77,6 +79,8 @@ public class MindSwap : MonoBehaviour
 
     public void SwapMindFromUI()
     {
+        if (!activeController.isGrounded) return;
+        players[(int)activePlayer].gameObject.GetComponentInChildren<Animator>().SetBool("IsMoving", false);
         GameObject textObject = EventSystem.current.currentSelectedGameObject.transform.GetChild(0).gameObject;
         string ability = textObject.GetComponent<Text>().text;
 
@@ -84,6 +88,7 @@ public class MindSwap : MonoBehaviour
 
         PlayerAbility.Ability swapToAbility = GetAbilityFromString(ability);
         GameObject switchTo = players[(int)swapToAbility];
+        
 
         if (activePlayer == GetAbilityFromString(ability))
         {
